@@ -67,50 +67,30 @@ class $AssetsIconsGen {
   SvgGenImage get imgThumbsUp =>
       const SvgGenImage('assets/icons/img_thumbs_up.svg');
 
+  /// File path: assets/icons/listView.svg
+  SvgGenImage get listView => const SvgGenImage('assets/icons/listView.svg');
+
   /// File path: assets/icons/tableView.svg
   SvgGenImage get tableView => const SvgGenImage('assets/icons/tableView.svg');
 
   /// List of all assets
   List<SvgGenImage> get values =>
-      [search, delete, filter, imgSettings, imgThumbsUp, tableView];
+      [search, delete, filter, imgSettings, imgThumbsUp, listView, tableView];
 }
 
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
-  /// File path: assets/images/alanRails.png
-  AssetGenImage get alanRails =>
-      const AssetGenImage('assets/images/alanRails.png');
+  /// File path: assets/images/SearchEmpty.png
+  AssetGenImage get searchEmpty =>
+      const AssetGenImage('assets/images/SearchEmpty.png');
 
-  /// File path: assets/images/albertEinshtein.png
-  AssetGenImage get albertEinshtein =>
-      const AssetGenImage('assets/images/albertEinshtein.png');
-
-  /// File path: assets/images/directorAgency.png
-  AssetGenImage get directorAgency =>
-      const AssetGenImage('assets/images/directorAgency.png');
-
-  /// File path: assets/images/mortySmith.png
-  AssetGenImage get mortySmith =>
-      const AssetGenImage('assets/images/mortySmith.png');
-
-  /// File path: assets/images/rickSanchez.png
-  AssetGenImage get rickSanchez =>
-      const AssetGenImage('assets/images/rickSanchez.png');
-
-  /// File path: assets/images/sammerSmith.png
-  AssetGenImage get sammerSmith =>
-      const AssetGenImage('assets/images/sammerSmith.png');
+  /// File path: assets/images/SearchEmpty2.png
+  AssetGenImage get searchEmpty2 =>
+      const AssetGenImage('assets/images/SearchEmpty2.png');
 
   /// List of all assets
-  List<AssetGenImage> get values => [
-        alanRails,
-        albertEinshtein,
-        directorAgency,
-        mortySmith,
-        rickSanchez,
-        sammerSmith
-      ];
+  List<AssetGenImage> get values => [searchEmpty, searchEmpty2];
 }
 
 class Assets {

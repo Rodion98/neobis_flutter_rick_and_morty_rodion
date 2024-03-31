@@ -1,21 +1,38 @@
 import 'package:auto_route/annotations.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:neobis_flutter_rick_and_morty_rodion/core/app/router/router.dart';
 import 'package:neobis_flutter_rick_and_morty_rodion/core/network/Api.dart';
+import 'package:neobis_flutter_rick_and_morty_rodion/features/characters/presentation/widgets/build_grid_view.dart';
+import 'package:neobis_flutter_rick_and_morty_rodion/features/characters/presentation/widgets/build_list_view.dart';
 import 'package:neobis_flutter_rick_and_morty_rodion/gen/assets.gen.dart';
 import 'package:neobis_flutter_rick_and_morty_rodion/src/io_ui.dart';
 import 'package:neobis_flutter_rick_and_morty_rodion/gen/strings.g.dart';
 import 'package:rick_and_morty_api/rick_and_morty_api.dart';
 
 @RoutePage()
-class CharactersScreen extends StatelessWidget {
-  const CharactersScreen({super.key});
+class CharactersScreen extends StatefulWidget {
+  CharactersScreen({super.key});
 
+  late TextEditingController textEditingController = TextEditingController();
+  bool view = true;
+
+  @override
+  State<CharactersScreen> createState() => _CharactersScreenState();
+}
+
+class _CharactersScreenState extends State<CharactersScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: MyTextFiled(),
-        ),
+            title: MyTextFiled(
+          textEditingController: widget.textEditingController,
+          onChangedCallback: (text) {
+            setState(() {});
+          },
+        )),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Column(
@@ -23,12 +40,11 @@ class CharactersScreen extends StatelessWidget {
               SizedBox(
                 height: 10,
               ),
-              _buildCount(),
+              _buildCountAndView(),
               SizedBox(
                 height: 10,
               ),
-              // _buildList(),
-              _buildGrid()
+              _buildView()
             ],
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -36,142 +52,50 @@ class CharactersScreen extends StatelessWidget {
         ));
   }
 
-  Expanded _buildList() {
+  Future<List<Character>> _findPerson(
+      TextEditingController textEditingController) {
+    var _filters = CharacterFilters(
+      name: textEditingController.text,
+    );
+    return charactersClass.getFilteredCharacters(_filters);
+  }
+
+  Expanded _buildView() {
     return Expanded(
       child: FutureBuilder<List<Character>>(
-        future: charactersClass.getAllCharacters(),
+        // future: charactersClass.getAllCharacters(),
+        future: _findPerson(widget.textEditingController),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return Center(
+              child: CircularProgressIndicator(),
+            );
           } else if (snapshot.hasError || snapshot.data == null) {
-            return Center(child: Text('Error Loading Data.'));
+            return Center(
+              child: Assets.images.searchEmpty.image(),
+            );
           } else {
             var characters = snapshot.data!;
-            return ListView.builder(
-              itemCount: characters.length,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        height: 74,
-                        width: 74,
-                        child: Container(
-                          child: CircleAvatar(
-                            backgroundImage:
-                                NetworkImage(characters[index].image),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            characters[index].status,
-                            style: (characters[index].status == 'Alive')
-                                ? AppTextStyle.aliveText10
-                                : AppTextStyle.deadText10,
-                          ),
-                          Text(
-                            characters[index].name,
-                            style: AppTextStyle.nameInListText16,
-                          ),
-                          Text(
-                            '${characters[index].species}, ${characters[index].gender}   ',
-                            style: AppTextStyle.statusText12,
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                );
-              },
-            );
+            if (widget.view == false) {
+              return BuildGridView(characters: characters);
+            } else {
+              return BuildListView(characters: characters);
+            }
           }
         },
       ),
     );
   }
 
-  Expanded _buildGrid() {
-    return Expanded(
-      child: FutureBuilder<List<Character>>(
-        future: charactersClass.getAllCharacters(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError || snapshot.data == null) {
-            return Center(child: Text('Error Loading Data.'));
-          } else {
-            var characters = snapshot.data!;
-            return GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                // crossAxisSpacing: 20.0,
-                mainAxisSpacing: 20.0,
-              ),
-              itemCount: characters.length,
-              itemBuilder: (context, index) {
-                return Expanded(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        height: 110,
-                        width: 110,
-                        child: Container(
-                          child: CircleAvatar(
-                            backgroundImage:
-                                NetworkImage(characters[index].image),
-                          ),
-                        ),
-                      ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            characters[index].status,
-                            style: (characters[index].status == 'Alive')
-                                ? AppTextStyle.aliveText10
-                                : AppTextStyle.deadText10,
-                          ),
-                          Text(
-                            characters[index].name,
-                            style: AppTextStyle.nameInListText16,
-                            textAlign: TextAlign.center,
-                          ),
-                          Text(
-                            '${characters[index].species}, ${characters[index].gender}   ',
-                            style: AppTextStyle.statusText12,
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                );
-              },
-            );
-          }
-        },
-      ),
-    );
-  }
-
-  Row _buildCount() {
+  Row _buildCountAndView() {
+    List<SvgPicture> icons = [
+      Assets.icons.tableView.svg(),
+      Assets.icons.listView.svg(),
+    ];
     return Row(
       children: [
         Text(
-          '${t.allPerson}: 200',
+          '${t.allPerson}: ',
           style: AppTextStyle.allPersonsText10.copyWith(
             shadows: [
               BoxShadow(
@@ -182,40 +106,16 @@ class CharactersScreen extends StatelessWidget {
             ],
           ),
         ),
-        Assets.icons.tableView.svg(),
+        InkWell(
+          onTap: () {
+            setState(() {
+              widget.view = !widget.view;
+            });
+          },
+          child: widget.view ? icons[0] : icons[1],
+        )
       ],
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
     );
   }
 }
-
-// class CharacterListView extends StatelessWidget {
-//   const CharacterListView({
-//     Key? key,
-//   }) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return FutureBuilder<List<Character>>(
-//       future: charactersClass.getAllCharacters(),
-//       builder: (context, snapshot) {
-//         if (snapshot.connectionState == ConnectionState.waiting) {
-//           return Center(child: CircularProgressIndicator());
-//         } else if (snapshot.hasError || snapshot.data == null) {
-//           return Center(child: Text('Error Loading Data.'));
-//         } else {
-//           var characters = snapshot.data!;
-//           return ListView.builder(
-//             itemCount: characters.length,
-//             itemBuilder: (context, index) {
-//               return ListTile(
-//                 title: Text(characters[index].name),
-//                 subtitle: Text('Index Number - ${index + 1}'),
-//               );
-//             },
-//           );
-//         }
-//       },
-//     );
-//   }
-// }

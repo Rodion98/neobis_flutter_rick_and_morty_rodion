@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:auto_route/annotations.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:neobis_flutter_rick_and_morty_rodion/gen/strings.g.dart';
 import 'package:neobis_flutter_rick_and_morty_rodion/src/io_ui.dart';
@@ -8,27 +9,11 @@ import 'package:rick_and_morty_api/rick_and_morty_api.dart';
 
 @RoutePage()
 class ProfileScreen extends StatelessWidget {
-  final Character character = Character(
-      created: DateTime(2017 - 11 - 04),
-      episode: [],
-      gender: "Male",
-      id: 1,
-      image: "https://rickandmortyapi.com/api/character/avatar/1.jpeg",
-      location: CharacterLocation(
-          name: "Citadel of Ricks",
-          url: "https://rickandmortyapi.com/api/location/3"),
-      name: "Rick Sanchez",
-      origin: CharacterLocation(
-          name: "Earth (C-137)",
-          url: "https://rickandmortyapi.com/api/location/1"),
-      species: "Human",
-      status: "Alive",
-      type: "",
-      url: "https://rickandmortyapi.com/api/location/1");
+  final Character? character;
 
-  ProfileScreen({super.key});
+  ProfileScreen({super.key, required this.character});
 
-  List<EpisodeCustom> episodes = [
+  final List<EpisodeCustom> episodes = [
     EpisodeCustom(
         name: 'The Ricklantis Mixup',
         airDate: DateTime(9, 10, 2017),
@@ -47,18 +32,18 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Column(
+        body: ListView(
       children: [
         Stack(
           clipBehavior: Clip.none,
           alignment: Alignment.center,
           children: [
             Container(
-              height: MediaQuery.of(context).size.height / 3,
+              height: MediaQuery.of(context).size.height / 4,
               width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: NetworkImage(character.image),
+                  image: NetworkImage(character!.image),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -79,73 +64,86 @@ class ProfileScreen extends StatelessWidget {
               ),
             ),
             Positioned(
+                child: GestureDetector(
+                  onTap: () {
+                    AutoRouter.of(context).popUntilRoot();
+                  },
+                  child: Icon(
+                    Icons.arrow_back,
+                    color: AppColors.whiteText,
+                  ),
+                ),
+                bottom: 0,
+                height: 350,
+                right: 0,
+                left: -330),
+            Positioned(
               bottom: -90.0,
               child: CircleAvatar(
                 radius: 108,
                 backgroundColor: AppColors.backgroundColor,
                 child: CircleAvatar(
                   radius: 100,
-                  backgroundImage: NetworkImage(character.image),
+                  backgroundImage: NetworkImage(character!.image),
                 ),
               ),
             ),
           ],
         ),
         Container(
-          height: MediaQuery.of(context).size.height / 1.5,
-          child: Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: 100,
-                  ),
-                  Text(
-                    character.name,
-                    style: AppTextStyle.profileName34,
-                  ),
-                  Text(
-                    character.status,
-                    style: (character.status == 'Alive')
-                        ? AppTextStyle.aliveText10
-                        : AppTextStyle.deadText10,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          _buildListTike(t.gender, character.gender),
-                          _buildListTike(t.race, character.species)
-                        ],
+          height: MediaQuery.of(context).size.height,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 100,
+                ),
+                Text(
+                  character!.name,
+                  style: AppTextStyle.profileName34,
+                  textAlign: TextAlign.center,
+                ),
+                Text(
+                  character!.status,
+                  style: (character!.status == 'Alive')
+                      ? AppTextStyle.aliveText10
+                      : AppTextStyle.deadText10,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        _buildListTike(t.gender, character!.gender),
+                        _buildListTike(t.race, character!.species)
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        _buildListTike(t.geoposition, character!.origin.name),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        _buildListTike(
+                            t.placeOfBirth, character!.location.name),
+                      ],
+                    ),
+                    Divider(color: AppColors.searchFiledColor),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16.0),
+                      child: Text(
+                        t.episodes,
+                        style: AppTextStyle.episodesTitle20,
                       ),
-                      Row(
-                        children: [
-                          _buildListTike(t.geoposition, character.origin.name),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          _buildListTike(
-                              t.placeOfBirth, character.location.name),
-                        ],
-                      ),
-                      Divider(color: AppColors.searchFiledColor),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 16.0),
-                        child: Text(
-                          t.episodes,
-                          style: AppTextStyle.episodesTitle20,
-                        ),
-                      ),
-                      SizedBox(height: 26),
-                      _buildSeries(episodes[0]),
-                      _buildSeries(episodes[1]),
-                      _buildSeries(episodes[2]),
-                    ],
-                  ),
-                ],
-              ),
+                    ),
+                    SizedBox(height: 26),
+                    _buildSeries(episodes[0]),
+                    _buildSeries(episodes[1]),
+                    _buildSeries(episodes[2]),
+                  ],
+                ),
+              ],
             ),
           ),
         )

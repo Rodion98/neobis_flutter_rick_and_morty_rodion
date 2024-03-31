@@ -16,9 +16,11 @@ abstract class _$AppRouter extends RootStackRouter {
   @override
   final Map<String, PageFactory> pagesMap = {
     CharactersRoute.name: (routeData) {
+      final args = routeData.argsAs<CharactersRouteArgs>(
+          orElse: () => const CharactersRouteArgs());
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const CharactersScreen(),
+        child: CharactersScreen(key: args.key),
       );
     },
     FilterRoute.name: (routeData) {
@@ -27,24 +29,14 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const FilterScreen(),
       );
     },
-    MyHomeRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const MyHomePage(),
-      );
-    },
     ProfileRoute.name: (routeData) {
-      final args = routeData.argsAs<ProfileRouteArgs>(
-          orElse: () => const ProfileRouteArgs());
+      final args = routeData.argsAs<ProfileRouteArgs>();
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: ProfileScreen(),
-      );
-    },
-    SearchRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const SearchScreen(),
+        child: ProfileScreen(
+          key: args.key,
+          character: args.character,
+        ),
       );
     },
   };
@@ -52,16 +44,31 @@ abstract class _$AppRouter extends RootStackRouter {
 
 /// generated route for
 /// [CharactersScreen]
-class CharactersRoute extends PageRouteInfo<void> {
-  const CharactersRoute({List<PageRouteInfo>? children})
-      : super(
+class CharactersRoute extends PageRouteInfo<CharactersRouteArgs> {
+  CharactersRoute({
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
           CharactersRoute.name,
+          args: CharactersRouteArgs(key: key),
           initialChildren: children,
         );
 
   static const String name = 'CharactersRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static const PageInfo<CharactersRouteArgs> page =
+      PageInfo<CharactersRouteArgs>(name);
+}
+
+class CharactersRouteArgs {
+  const CharactersRouteArgs({this.key});
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'CharactersRouteArgs{key: $key}';
+  }
 }
 
 /// generated route for
@@ -79,27 +86,18 @@ class FilterRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [MyHomePage]
-class MyHomeRoute extends PageRouteInfo<void> {
-  const MyHomeRoute({List<PageRouteInfo>? children})
-      : super(
-          MyHomeRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'MyHomeRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
 /// [ProfileScreen]
 class ProfileRoute extends PageRouteInfo<ProfileRouteArgs> {
   ProfileRoute({
+    Key? key,
+    required Character? character,
     List<PageRouteInfo>? children,
   }) : super(
           ProfileRoute.name,
-          args: ProfileRouteArgs(),
+          args: ProfileRouteArgs(
+            key: key,
+            character: character,
+          ),
           initialChildren: children,
         );
 
@@ -110,24 +108,17 @@ class ProfileRoute extends PageRouteInfo<ProfileRouteArgs> {
 }
 
 class ProfileRouteArgs {
-  const ProfileRouteArgs();
+  const ProfileRouteArgs({
+    this.key,
+    required this.character,
+  });
+
+  final Key? key;
+
+  final Character? character;
 
   @override
   String toString() {
-    return 'ProfileRouteArgs{}';
+    return 'ProfileRouteArgs{key: $key, character: $character}';
   }
-}
-
-/// generated route for
-/// [SearchScreen]
-class SearchRoute extends PageRouteInfo<void> {
-  const SearchRoute({List<PageRouteInfo>? children})
-      : super(
-          SearchRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'SearchRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
 }

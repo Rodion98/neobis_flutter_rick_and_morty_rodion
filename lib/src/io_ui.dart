@@ -6,11 +6,15 @@ library io_ui;
 // import 'package:slang_flutter/slang_flutter.dart';
 // import 'package:flutter_svg/flutter_svg.dart';
 
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:neobis_flutter_rick_and_morty_rodion/core/app/router/router.dart';
+import 'package:neobis_flutter_rick_and_morty_rodion/core/network/Api.dart';
 import 'package:neobis_flutter_rick_and_morty_rodion/gen/assets.gen.dart';
 // import 'package:flutter_svg/svg.dart';
 import 'package:neobis_flutter_rick_and_morty_rodion/gen/fonts.gen.dart';
-import 'package:neobis_flutter_rick_and_morty_rodion/gen/strings.g.dart';
+import 'package:rick_and_morty_api/rick_and_morty_api.dart';
+// import 'package:neobis_flutter_rick_and_morty_rodion/gen/strings.g.dart';
 // import 'package:provider/provider.dart';
 
 // /// Widgets

@@ -7,6 +7,12 @@ class AppTextStyle {
       fontFamily: FontFamily.roboto,
       fontWeight: FontWeight.w400,
       letterSpacing: 0.44);
+  static const typedText16 = TextStyle(
+      fontSize: 16,
+      color: AppColors.whiteText,
+      fontFamily: FontFamily.roboto,
+      fontWeight: FontWeight.w400,
+      letterSpacing: 0.44);
 
   static const allPersonsText10 = TextStyle(
     fontSize: 12,
@@ -25,7 +31,7 @@ class AppTextStyle {
   );
 
   static const aliveText10 = TextStyle(
-      fontSize: 14,
+      fontSize: 12,
       color: AppColors.greenText,
       fontFamily: FontFamily.roboto,
       fontWeight: FontWeight.w500,
@@ -102,7 +108,7 @@ class AppTextStyle {
       letterSpacing: 0.25);
 
   static const deadText10 = TextStyle(
-      fontSize: 10,
+      fontSize: 12,
       color: AppColors.redText,
       fontFamily: FontFamily.roboto,
       fontWeight: FontWeight.w500,

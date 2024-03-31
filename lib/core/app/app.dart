@@ -14,9 +14,6 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         scaffoldBackgroundColor: AppColors.backgroundColor,
         appBarTheme: AppBarTheme(backgroundColor: AppColors.backgroundColor),
-
-        // colorScheme: ColorScheme.dark(
-        //     background: AppColors.redText, surface: AppColors.greyUsual),
         useMaterial3: true,
       ),
       routerConfig: _router.config(),

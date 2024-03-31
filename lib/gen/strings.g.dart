@@ -6,7 +6,7 @@
 /// Locales: 1
 /// Strings: 19
 ///
-/// Built on 2024-03-29 at 07:17 UTC
+/// Built on 2024-03-31 at 08:48 UTC
 
 // coverage:ignore-file
 // ignore_for_file: type=lint
@@ -161,7 +161,7 @@ class Translations implements BaseTranslations<AppLocale, Translations> {
 	String get filters => 'Фильтры';
 	String get sort => 'сортировать';
 	String get alive => 'Живой';
-	String get dead => 'Фильтры';
+	String get dead => 'Мертвый';
 	String get unknown => 'Неизвестно';
 	String get male => 'Мужской';
 	String get female => 'Женский';
@@ -188,7 +188,7 @@ extension on Translations {
 			case 'filters': return 'Фильтры';
 			case 'sort': return 'сортировать';
 			case 'alive': return 'Живой';
-			case 'dead': return 'Фильтры';
+			case 'dead': return 'Мертвый';
 			case 'unknown': return 'Неизвестно';
 			case 'male': return 'Мужской';
 			case 'female': return 'Женский';
