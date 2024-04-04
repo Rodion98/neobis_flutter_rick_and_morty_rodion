@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:neobis_flutter_rick_and_morty_rodion/core/app/io_ui.dart';
 import 'package:neobis_flutter_rick_and_morty_rodion/core/app/router/router.dart';
-import 'package:neobis_flutter_rick_and_morty_rodion/src/io_ui.dart';
 
 class MyApp extends StatelessWidget {
   MyApp({super.key});

@@ -3,31 +3,18 @@ import 'dart:ui';
 import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:neobis_flutter_rick_and_morty_rodion/core/app/io_ui.dart';
+import 'package:neobis_flutter_rick_and_morty_rodion/features/characters/data/models/character.dart';
 import 'package:neobis_flutter_rick_and_morty_rodion/gen/strings.g.dart';
-import 'package:neobis_flutter_rick_and_morty_rodion/src/io_ui.dart';
-import 'package:rick_and_morty_api/rick_and_morty_api.dart';
 
 @RoutePage()
 class ProfileScreen extends StatelessWidget {
-  final Character? character;
+  final Results character;
 
-  ProfileScreen({super.key, required this.character});
-
-  final List<EpisodeCustom> episodes = [
-    EpisodeCustom(
-        name: 'The Ricklantis Mixup',
-        airDate: DateTime(9, 10, 2017),
-        episode: "S03E07"),
-    EpisodeCustom(
-        name: "Morty's Mind Blowers",
-        airDate: DateTime(9, 17, 2017),
-        episode: "S03E08"),
-    EpisodeCustom(
-      name: "The ABC's of Beth",
-      airDate: DateTime(9, 24, 2017),
-      episode: "S03E09",
-    ),
-  ];
+  ProfileScreen({
+    required this.character,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +30,7 @@ class ProfileScreen extends StatelessWidget {
               width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: NetworkImage(character!.image),
+                  image: NetworkImage(character.image),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -84,7 +71,7 @@ class ProfileScreen extends StatelessWidget {
                 backgroundColor: AppColors.backgroundColor,
                 child: CircleAvatar(
                   radius: 100,
-                  backgroundImage: NetworkImage(character!.image),
+                  backgroundImage: NetworkImage(character.image),
                 ),
               ),
             ),
@@ -99,13 +86,13 @@ class ProfileScreen extends StatelessWidget {
                   height: 100,
                 ),
                 Text(
-                  character!.name,
+                  character.name,
                   style: AppTextStyle.profileName34,
                   textAlign: TextAlign.center,
                 ),
                 Text(
-                  character!.status,
-                  style: (character!.status == 'Alive')
+                  character.status,
+                  style: (character.status == 'Alive')
                       ? AppTextStyle.aliveText10
                       : AppTextStyle.deadText10,
                 ),
@@ -114,19 +101,18 @@ class ProfileScreen extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        _buildListTike(t.gender, character!.gender),
-                        _buildListTike(t.race, character!.species)
+                        _buildListTike(t.gender, character.gender),
+                        _buildListTike(t.race, character.species)
                       ],
                     ),
                     Row(
                       children: [
-                        _buildListTike(t.geoposition, character!.origin.name),
+                        _buildListTike(t.geoposition, character.origin.name),
                       ],
                     ),
                     Row(
                       children: [
-                        _buildListTike(
-                            t.placeOfBirth, character!.location.name),
+                        _buildListTike(t.placeOfBirth, character.location.name),
                       ],
                     ),
                     Divider(color: AppColors.searchFiledColor),
@@ -138,9 +124,12 @@ class ProfileScreen extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 26),
-                    _buildSeries(episodes[0]),
-                    _buildSeries(episodes[1]),
-                    _buildSeries(episodes[2]),
+                    _buildSeries(character.episode),
+                    _buildSeries(character.episode),
+                    _buildSeries(character.episode),
+
+                    // _buildSeries(episodes[1]),
+                    // _buildSeries(episodes[2]),
                   ],
                 ),
               ],
@@ -152,38 +141,26 @@ class ProfileScreen extends StatelessWidget {
   }
 }
 
-class EpisodeCustom {
-  EpisodeCustom({
-    required this.name,
-    required this.airDate,
-    required this.episode,
-  });
-
-  String name;
-  DateTime airDate;
-  String episode;
-}
-
-_buildSeries(EpisodeCustom episode) {
+_buildSeries(List<String> epizodes) {
   return Padding(
     padding: const EdgeInsets.only(left: 17.0),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '${t.series} 1',
+          '${t.series} ${epizodes[0]}',
           style: AppTextStyle.epizodeText10,
         ),
         SizedBox(height: 4),
-        Text(
-          episode.name.toString(),
-          style: AppTextStyle.nameInListText16,
-        ),
+        // Text(
+        //   episode.name.toString(),
+        //   style: AppTextStyle.nameInListText16,
+        // ),
         SizedBox(height: 5),
-        Text(
-          episode.airDate.toString(),
-          style: AppTextStyle.seriesText14,
-        ),
+        // Text(
+        //   episode.airDate.toString(),
+        //   style: AppTextStyle.seriesText14,
+        // ),
         SizedBox(height: 33),
       ],
     ),
@@ -193,7 +170,7 @@ _buildSeries(EpisodeCustom episode) {
 Expanded _buildListTike(String title, String subtitle) {
   return Expanded(
     child: Container(
-      // width: 20,
+      width: 20,
       child: ListTile(
         title: Text(
           title,

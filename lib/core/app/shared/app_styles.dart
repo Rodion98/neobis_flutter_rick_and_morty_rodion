@@ -64,6 +64,7 @@ class AppTextStyle {
       color: AppColors.whiteText,
       fontFamily: FontFamily.roboto,
       fontWeight: FontWeight.w400,
+      height: 1.17,
       letterSpacing: 0.25);
 
   static const profileInfo14 = TextStyle(

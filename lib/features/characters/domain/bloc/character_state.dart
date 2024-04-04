@@ -1,18 +1,12 @@
-// part of 'post_bloc.dart';
+part of 'character_bloc.dart';
 
-// enum PostStatus { initial, success, failure }
-
-// @freezed
-// class CharactersState with _$CharactersState {
-//   const factory CharactersState({
-//     required,
-//   }) = CharactersState;
-
-//   factory CharactersState.initial() {
-//     return const CharactersState(
-//       counter: 0,
-//     );
-//   }
+@freezed
+class CharacterState with _$CharacterState {
+  const factory CharacterState.loading() = _CharacterStateLoading;
+  const factory CharacterState.success({required Character character}) =
+      _CharacterStateSuccess;
+  const factory CharacterState.failure() = _CharacterStateError;
+}
 // }
 
 // final class CharactersState extends Equatable {

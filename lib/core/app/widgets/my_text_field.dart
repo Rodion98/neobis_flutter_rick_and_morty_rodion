@@ -1,13 +1,6 @@
 part of io_ui;
 
 class MyTextFiled extends StatefulWidget {
-  TextEditingController textEditingController;
-  final Function(String) onChangedCallback;
-  MyTextFiled(
-      {required this.onChangedCallback,
-      required this.textEditingController,
-      super.key});
-
   @override
   State<MyTextFiled> createState() => _MyTextFiledState();
 }
@@ -21,14 +14,14 @@ class _MyTextFiledState extends State<MyTextFiled> {
           Expanded(
             child: TextField(
               style: AppTextStyle.typedText16,
-              controller: widget.textEditingController,
-              onChanged: (text) {
-                widget.onChangedCallback(
-                    text); // Вызываем обратный вызов при изменении текста
+              onChanged: (value) {
+                context
+                    .read<CharacterBloc>()
+                    .add(CharacterEvent.search(name: value));
               },
               decoration: InputDecoration(
                   contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 15),
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
                   hintText: 'Найти персонажа',
                   hintStyle:
                       const TextStyle(color: AppColors.greyUsual, fontSize: 16),
@@ -43,13 +36,13 @@ class _MyTextFiledState extends State<MyTextFiled> {
                     borderSide: BorderSide.none,
                   ),
                   prefixIcon: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding: const EdgeInsets.only(
+                        bottom: 12, top: 12, left: 15, right: 10),
                     child: Assets.icons.search.svg(),
                   ),
                   suffixIcon: Padding(
                     padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        const EdgeInsets.only(right: 19, bottom: 16, top: 16),
                     child: GestureDetector(
                       onTap: () {
                         AutoRouter.of(context).push(FilterRoute());

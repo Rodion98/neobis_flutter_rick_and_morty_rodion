@@ -1,19 +1,66 @@
-// import 'dart:async';
-// import 'dart:convert';
+import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:bloc_concurrency/bloc_concurrency.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:neobis_flutter_rick_and_morty_rodion/features/characters/data/models/character.dart';
+import 'package:neobis_flutter_rick_and_morty_rodion/features/characters/data/repository/character_repo.dart';
+import 'package:rxdart/rxdart.dart';
 
-// import 'package:bloc/bloc.dart';
-// import 'package:flutter_bloc/flutter_bloc.dart';
+part 'character_bloc.freezed.dart';
+// part 'character_bloc.g.dart';
+part 'character_event.dart';
+part 'character_state.dart';
 
-// import 'package:bloc_concurrency/bloc_concurrency.dart';
-// // import 'package:equatable/equatable.dart';
-// import 'package:freezed_annotation/freezed_annotation.dart';
+class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
+  final CharacterRepo characterRepo;
+  CharacterBloc({required this.characterRepo})
+      : super(const CharacterState.loading()) {
+    on<_GetSearchCharacters>(
+      _onSearch,
+      transformer: (events, mapper) {
+        return events
+            .debounceTime(
+              const Duration(milliseconds: 500),
+            )
+            .asyncExpand(mapper);
+      },
+    );
+    on<_GetFilterCharacters>(_onFilter);
+  }
+
+  Future<void> _onSearch(
+      _GetSearchCharacters event, Emitter<CharacterState> emit) async {
+    emit(const CharacterState.loading());
+
+    try {
+      Character _characters = await characterRepo.getSearchCharacters(
+        event.name!,
+      );
+      emit(CharacterState.success(character: _characters));
+    } catch (_) {
+      emit(const CharacterState.failure());
+    }
+  }
+
+  Future<void> _onFilter(
+      _GetFilterCharacters event, Emitter<CharacterState> emit) async {
+    emit(const CharacterState.loading());
+
+    try {
+      Character _characters =
+          await characterRepo.getFilterCharacters(event.gender!, event.status!);
+      emit(CharacterState.success(character: _characters));
+    } catch (_) {
+      emit(const CharacterState.failure());
+    }
+  }
+}
 
 
-// import 'package:http/http.dart' as http;
-// import 'package:stream_transform/stream_transform.dart';
 
-// part 'post_event.dart';
-// part 'post_state.dart';
+
+
+
 
 // const _postLimit = 20;
 // const throttleDuration = Duration(milliseconds: 100);

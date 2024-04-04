@@ -1,10 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:neobis_flutter_rick_and_morty_rodion/core/app/io_ui.dart';
 import 'package:neobis_flutter_rick_and_morty_rodion/core/app/router/router.dart';
-
-import 'package:rick_and_morty_api/rick_and_morty_api.dart';
-
-import 'package:neobis_flutter_rick_and_morty_rodion/src/io_ui.dart';
+import 'package:neobis_flutter_rick_and_morty_rodion/features/characters/data/models/character.dart';
 
 class BuildGridView extends StatelessWidget {
   BuildGridView({
@@ -12,23 +10,23 @@ class BuildGridView extends StatelessWidget {
     required this.characters,
   });
 
-  final List<Character> characters;
+  final List<Results> characters;
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        mainAxisSpacing: 20.0,
-      ),
-      itemCount: characters.length,
-      itemBuilder: (context, index) {
-        return GestureDetector(
-          onTap: () {
-            AutoRouter.of(context)
-                .push(ProfileRoute(character: characters[index]));
-          },
-          child: Expanded(
+    return Expanded(
+      child: GridView.builder(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          mainAxisSpacing: 20.0,
+        ),
+        itemCount: characters.length,
+        itemBuilder: (context, index) {
+          return GestureDetector(
+            onTap: () {
+              AutoRouter.of(context)
+                  .push(ProfileRoute(character: characters[index]));
+            },
             child: Column(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -67,9 +65,9 @@ class BuildGridView extends StatelessWidget {
                 )
               ],
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }

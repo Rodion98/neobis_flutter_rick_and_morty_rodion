@@ -34,8 +34,8 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: ProfileScreen(
-          key: args.key,
           character: args.character,
+          key: args.key,
         ),
       );
     },
@@ -89,14 +89,14 @@ class FilterRoute extends PageRouteInfo<void> {
 /// [ProfileScreen]
 class ProfileRoute extends PageRouteInfo<ProfileRouteArgs> {
   ProfileRoute({
+    required Results character,
     Key? key,
-    required Character? character,
     List<PageRouteInfo>? children,
   }) : super(
           ProfileRoute.name,
           args: ProfileRouteArgs(
-            key: key,
             character: character,
+            key: key,
           ),
           initialChildren: children,
         );
@@ -109,16 +109,16 @@ class ProfileRoute extends PageRouteInfo<ProfileRouteArgs> {
 
 class ProfileRouteArgs {
   const ProfileRouteArgs({
-    this.key,
     required this.character,
+    this.key,
   });
+
+  final Results character;
 
   final Key? key;
 
-  final Character? character;
-
   @override
   String toString() {
-    return 'ProfileRouteArgs{key: $key, character: $character}';
+    return 'ProfileRouteArgs{character: $character, key: $key}';
   }
 }
