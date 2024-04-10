@@ -1,8 +1,10 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:neobis_flutter_rick_and_morty_rodion/core/app/io_ui.dart';
 import 'package:neobis_flutter_rick_and_morty_rodion/core/app/router/router.dart';
-import 'package:neobis_flutter_rick_and_morty_rodion/features/characters/data/models/character.dart';
+import 'package:neobis_flutter_rick_and_morty_rodion/features/characters/domain/entity/character_entity.dart';
+import 'package:neobis_flutter_rick_and_morty_rodion/features/characters/presentation/bloc/character_bloc.dart';
 
 class BuildListView extends StatelessWidget {
   const BuildListView({
@@ -10,18 +12,26 @@ class BuildListView extends StatelessWidget {
     required this.characters,
   });
 
-  final List<Results> characters;
+  final CharacterEntity characters;
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: ListView.builder(
-        itemCount: characters.length,
+        itemCount: characters.results.length,
         itemBuilder: (context, index) {
+          // if (index == characters.results.length - 1) {
+          //   context.read<CharacterBloc>().add(
+          //         CharacterEvent.search(page: 3),
+          //       );
+          // }
           return GestureDetector(
             onTap: () {
-              AutoRouter.of(context)
-                  .push(ProfileRoute(character: characters[index]));
+              AutoRouter.of(context).push(
+                ProfileRoute(
+                  character: characters.results[index],
+                ),
+              );
             },
             child: Padding(
               padding: const EdgeInsets.only(bottom: 20.0),
@@ -34,7 +44,8 @@ class BuildListView extends StatelessWidget {
                     width: 74,
                     child: Container(
                       child: CircleAvatar(
-                        backgroundImage: NetworkImage(characters[index].image),
+                        backgroundImage:
+                            NetworkImage(characters.results[index].image!),
                       ),
                     ),
                   ),
@@ -46,17 +57,17 @@ class BuildListView extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        characters[index].status,
-                        style: (characters[index].status == 'Alive')
+                        characters.results[index].status,
+                        style: (characters.results[index].status == 'Alive')
                             ? AppTextStyle.aliveText10
                             : AppTextStyle.deadText10,
                       ),
                       Text(
-                        characters[index].name,
+                        characters.results[index].name,
                         style: AppTextStyle.nameInListText16,
                       ),
                       Text(
-                        '${characters[index].species}, ${characters[index].gender}   ',
+                        '${characters.results[index].species}, ${characters.results[index].gender}',
                         style: AppTextStyle.statusText12,
                       ),
                     ],

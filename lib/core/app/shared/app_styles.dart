@@ -20,14 +20,6 @@ class AppTextStyle {
     fontFamily: FontFamily.roboto,
     fontWeight: FontWeight.w500,
     letterSpacing: 1.5,
-    // shadows: [
-    //   BoxShadow(
-    //     color: Colors.black.withOpacity(0.4), // Цвет и прозрачность тени
-    //     offset: Offset(0, 4), // Смещение тени по горизонтали и вертикали
-    //     blurRadius: 4, // Радиус размытия тени
-    //     spreadRadius: 0, // Распространение тени
-    //   ),
-    // ],
   );
 
   static const aliveText10 = TextStyle(

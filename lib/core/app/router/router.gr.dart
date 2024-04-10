@@ -20,13 +20,19 @@ abstract class _$AppRouter extends RootStackRouter {
           orElse: () => const CharactersRouteArgs());
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: CharactersScreen(key: args.key),
+        child: CharactersScreen(
+          status: args.status,
+          gender: args.gender,
+          key: args.key,
+        ),
       );
     },
     FilterRoute.name: (routeData) {
+      final args = routeData.argsAs<FilterRouteArgs>(
+          orElse: () => const FilterRouteArgs());
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const FilterScreen(),
+        child: FilterScreen(key: args.key),
       );
     },
     ProfileRoute.name: (routeData) {
@@ -46,11 +52,17 @@ abstract class _$AppRouter extends RootStackRouter {
 /// [CharactersScreen]
 class CharactersRoute extends PageRouteInfo<CharactersRouteArgs> {
   CharactersRoute({
+    String? status,
+    String? gender,
     Key? key,
     List<PageRouteInfo>? children,
   }) : super(
           CharactersRoute.name,
-          args: CharactersRouteArgs(key: key),
+          args: CharactersRouteArgs(
+            status: status,
+            gender: gender,
+            key: key,
+          ),
           initialChildren: children,
         );
 
@@ -61,35 +73,57 @@ class CharactersRoute extends PageRouteInfo<CharactersRouteArgs> {
 }
 
 class CharactersRouteArgs {
-  const CharactersRouteArgs({this.key});
+  const CharactersRouteArgs({
+    this.status,
+    this.gender,
+    this.key,
+  });
+
+  final String? status;
+
+  final String? gender;
 
   final Key? key;
 
   @override
   String toString() {
-    return 'CharactersRouteArgs{key: $key}';
+    return 'CharactersRouteArgs{status: $status, gender: $gender, key: $key}';
   }
 }
 
 /// generated route for
 /// [FilterScreen]
-class FilterRoute extends PageRouteInfo<void> {
-  const FilterRoute({List<PageRouteInfo>? children})
-      : super(
+class FilterRoute extends PageRouteInfo<FilterRouteArgs> {
+  FilterRoute({
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
           FilterRoute.name,
+          args: FilterRouteArgs(key: key),
           initialChildren: children,
         );
 
   static const String name = 'FilterRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static const PageInfo<FilterRouteArgs> page = PageInfo<FilterRouteArgs>(name);
+}
+
+class FilterRouteArgs {
+  const FilterRouteArgs({this.key});
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'FilterRouteArgs{key: $key}';
+  }
 }
 
 /// generated route for
 /// [ProfileScreen]
 class ProfileRoute extends PageRouteInfo<ProfileRouteArgs> {
   ProfileRoute({
-    required Results character,
+    required ResultsEntity character,
     Key? key,
     List<PageRouteInfo>? children,
   }) : super(
@@ -113,7 +147,7 @@ class ProfileRouteArgs {
     this.key,
   });
 
-  final Results character;
+  final ResultsEntity character;
 
   final Key? key;
 

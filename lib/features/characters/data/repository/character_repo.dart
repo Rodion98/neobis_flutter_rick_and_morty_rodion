@@ -1,84 +1,28 @@
-import 'package:dio/dio.dart';
-import 'package:neobis_flutter_rick_and_morty_rodion/core/app/shared/app_constants.dart';
-import 'package:neobis_flutter_rick_and_morty_rodion/features/characters/data/data_source/api.dart';
-import 'package:neobis_flutter_rick_and_morty_rodion/features/characters/data/models/character.dart';
-import 'package:pretty_dio_logger/pretty_dio_logger.dart';
+import 'package:neobis_flutter_rick_and_morty_rodion/features/characters/data/data_source/retrofit.dart';
+import 'package:neobis_flutter_rick_and_morty_rodion/features/characters/data/mapper/results_,mapper.dart';
+import 'package:neobis_flutter_rick_and_morty_rodion/features/characters/domain/entity/character_entity.dart';
+import 'package:neobis_flutter_rick_and_morty_rodion/features/characters/domain/repository/repository.dart';
 
-class CharacterRepo {
-  // final ApiClient _apiClient;
+class CharacterRepoImpl implements CharacterRepo {
+  final CharactersApi api;
+  final CharacterMapper mapper;
 
-  // CharacterRepo(this._apiClient);
+  CharacterRepoImpl({required this.api, required this.mapper});
 
-  final url = Constnats.baseUrl;
-  Dio dio = Dio();
-
-  // Future<Character> getCharacters() async {
-  //   dio.interceptors.add(PrettyDioLogger());
-  //   try {
-  //     var response = await dio.get(url);
-  //     var jsonResult = response.data;
-
-  //     return Character.fromJson(jsonResult);
-  //   } catch (e) {
-  //     throw Exception(e.toString());
-  //   }
-  // }
-
-  // Future<Character> getCharacters({
-  //   String? name,
-  //   String? species,
-  //   String? status,
-  //   String? type,
-  //   String? gender,
-  //   int? page,
-  // }) async {
-  //   final httpResponse = await _apiClient.getCharacters(
-  //       name: name,
-  //       species: species,
-  //       status: status,
-  //       type: type,
-  //       gender: gender,
-  //       page: page);
-
-  //   return httpResponse.data;
-  // }
-
-  Future<Character> getSearchCharacters(String name) async {
-    dio.interceptors.add(PrettyDioLogger());
-    try {
-      var response = await dio.get((url + Constnats.character + '?name=$name'
-          //  '&status=alive'
-          ));
-      var jsonResult = response.data;
-
-      return Character.fromJson(jsonResult);
-    } catch (e) {
-      throw Exception(e.toString());
-    }
+  @override
+  Future<CharacterEntity> getCharacters({
+    String? name,
+    String? species,
+    String? status,
+    String? type,
+    String? gender,
+    int? page,
+  }) async {
+    final httpResponse = await api.getCharacters(
+        name: name, status: status, gender: gender, page: page);
+    final characterModel = httpResponse.data;
+    print(characterModel);
+    final characterEntity = mapper.mapper(characterModel);
+    return characterEntity;
   }
-
-  Future<Character> getFilterCharacters(String gender, String status) async {
-    dio.interceptors.add(PrettyDioLogger());
-    try {
-      var response = await dio
-          .get((url + Constnats.character + '/?status=$status&gender=$gender'));
-      var jsonResult = response.data;
-
-      return Character.fromJson(jsonResult);
-    } catch (e) {
-      throw Exception(e.toString());
-    }
-  }
-
-  // Future<Episode> getEpisode(List<String> episodes) async {
-  //   dio.interceptors.add(PrettyDioLogger());
-  //   try {
-  //     var response = await dio.get((episodes[0]));
-  //     var jsonResult = response.data;
-
-  //     return Episode.fromJson(jsonResult);
-  //   } catch (e) {
-  //     throw Exception(e.toString());
-  //   }
-  // }
 }

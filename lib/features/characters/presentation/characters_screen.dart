@@ -3,124 +3,73 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:neobis_flutter_rick_and_morty_rodion/core/app/router/router.dart';
-import 'package:neobis_flutter_rick_and_morty_rodion/features/characters/data/repository/character_repo.dart';
-import 'package:neobis_flutter_rick_and_morty_rodion/features/characters/domain/bloc/character_bloc.dart';
 
+import 'package:neobis_flutter_rick_and_morty_rodion/features/characters/presentation/bloc/character_bloc.dart';
 import 'package:neobis_flutter_rick_and_morty_rodion/features/characters/presentation/widgets/build_grid_view.dart';
 import 'package:neobis_flutter_rick_and_morty_rodion/features/characters/presentation/widgets/build_list_view.dart';
+
 import 'package:neobis_flutter_rick_and_morty_rodion/gen/assets.gen.dart';
 import 'package:neobis_flutter_rick_and_morty_rodion/core/app/io_ui.dart';
 import 'package:neobis_flutter_rick_and_morty_rodion/gen/strings.g.dart';
 
 @RoutePage()
 class CharactersScreen extends StatefulWidget {
-  CharactersScreen({super.key});
+  final String? status;
+  final String? gender;
+  CharactersScreen({this.status, this.gender, super.key});
 
   @override
   State<CharactersScreen> createState() => _CharactersScreenState();
 }
 
 class _CharactersScreenState extends State<CharactersScreen> {
-  // final repository = CharacterRepo();
   bool view = false;
 
+  @override
   void initState() {
-    context.read<CharacterBloc>().add(const CharacterEvent.search());
     super.initState();
+
+    context.read<CharacterBloc>().add(
+          CharacterEvent.search(gender: widget.gender, status: widget.status),
+        );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: MyTextFiled()),
-        body: BlocBuilder<CharacterBloc, CharacterState>(
-            builder: (context, state) {
+      appBar: AppBar(
+        title: MyTextFiled(widget.gender, widget.status),
+      ),
+      body: BlocBuilder<CharacterBloc, CharacterState>(
+        builder: (context, state) {
           return state.when(
             failure: () => Center(
               child: Assets.images.searchEmpty.image(),
             ),
             loading: () {
-              return Center(child: CircularProgressIndicator());
+              return Center(
+                child: CircularProgressIndicator(),
+              );
             },
             success: (character) => (Padding(
               padding: EdgeInsets.symmetric(horizontal: 16),
               child: Column(
                 children: [
                   SizedBox(height: 20),
-                  _buildCountAndView(character.info.count),
+                  _buildCountAndView(character.info.count!),
                   SizedBox(height: 20),
                   if (!view)
-                    BuildListView(characters: character.results)
+                    BuildListView(characters: character)
                   else
-                    BuildGridView(characters: character.results)
+                    BuildGridView(characters: character)
                 ],
               ),
             )),
           );
-        }));
+        },
+      ),
+    );
   }
-
-  //   return Expanded(
-  //     child: FutureBuilder<List<Character>>(
-  //       // future: charactersClass.getAllCharacters(),
-  //       future: _findPerson(widget.textEditingController),
-  //       builder: (context, snapshot) {
-  //         if (snapshot.connectionState == ConnectionState.waiting) {
-  //           return Center(
-  //             child: CircularProgressIndicator(),
-  //           );
-  //         } else if (snapshot.hasError || snapshot.data == null) {
-  //           return Center(
-  //             child: Assets.images.searchEmpty.image(),
-  //           );
-  //         } else {
-  //           var characters = snapshot.data!;
-  //           if (widget.view == false) {
-  //             return BuildGridView(characters: characters);
-  //           } else {
-  //             return BuildListView(characters: characters);
-  //           }
-  //         }
-  //       },
-  //     ),
-  //   );
-  // }
-
-  // Future<List<Character>> _findPerson(
-  //     TextEditingController textEditingController) {
-  //   var _filters = CharacterFilters(
-  //     name: textEditingController.text,
-  //   );
-  //   return charactersClass.getFilteredCharacters(_filters);
-  // }
-
-  // Expanded _buildView() {
-  //   return Expanded(
-  //     child: FutureBuilder<List<Character>>(
-  //       // future: charactersClass.getAllCharacters(),
-  //       future: _findPerson(widget.textEditingController),
-  //       builder: (context, snapshot) {
-  //         if (snapshot.connectionState == ConnectionState.waiting) {
-  //           return Center(
-  //             child: CircularProgressIndicator(),
-  //           );
-  //         } else if (snapshot.hasError || snapshot.data == null) {
-  //           return Center(
-  //             child: Assets.images.searchEmpty.image(),
-  //           );
-  //         } else {
-  //           var characters = snapshot.data!;
-  //           if (widget.view == false) {
-  //             return BuildGridView(characters: characters);
-  //           } else {
-  //             return BuildListView(characters: characters);
-  //           }
-  //         }
-  //       },
-  //     ),
-  //   );
-  // }
 
   Row _buildCountAndView(int count) {
     List<SvgPicture> icons = [
@@ -158,35 +107,3 @@ class _CharactersScreenState extends State<CharactersScreen> {
     );
   }
 }
-
-// class BuildView extends StatefulWidget {
-//   const BuildView({super.key});
-
-//   @override
-//   State<BuildView> createState() => _BuildViewState();
-// }
-
-// class _BuildViewState extends State<BuildView> {
-//   void initState() {
-//     context.read<CharacterBloc>().add(const CharacterEvent.search(name: ''));
-//     super.initState();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return BlocBuilder<CharacterBloc, CharacterState>(
-//         builder: (context, state) {
-//       return state.when(
-//           failure: () => const Text(
-//                 'nothing',
-//                 style: AppTextStyle.aliveText10,
-//               ),
-//           loading: () {
-//             return Center(child: CircularProgressIndicator());
-//           },
-//           success: (character) => (BuildListView(
-//                 characters: character.results,
-//               )));
-//     });
-//   }
-// }

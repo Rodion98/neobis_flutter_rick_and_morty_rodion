@@ -1,11 +1,22 @@
 part of io_ui;
 
 class MyTextFiled extends StatefulWidget {
+  final String? gender;
+  final String? status;
+
+  MyTextFiled(this.gender, this.status);
+
   @override
   State<MyTextFiled> createState() => _MyTextFiledState();
 }
 
 class _MyTextFiledState extends State<MyTextFiled> {
+  void initState() {
+    super.initState();
+    print(widget.gender);
+    print(widget.status);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -15,9 +26,8 @@ class _MyTextFiledState extends State<MyTextFiled> {
             child: TextField(
               style: AppTextStyle.typedText16,
               onChanged: (value) {
-                context
-                    .read<CharacterBloc>()
-                    .add(CharacterEvent.search(name: value));
+                context.read<CharacterBloc>().add(CharacterEvent.search(
+                    name: value, gender: widget.gender, status: widget.status));
               },
               decoration: InputDecoration(
                   contentPadding:
@@ -45,7 +55,7 @@ class _MyTextFiledState extends State<MyTextFiled> {
                         const EdgeInsets.only(right: 19, bottom: 16, top: 16),
                     child: GestureDetector(
                       onTap: () {
-                        AutoRouter.of(context).push(FilterRoute());
+                        AutoRouter.of(context).replace(FilterRoute());
                       },
                       child: SizedBox(
                           height: 24,
